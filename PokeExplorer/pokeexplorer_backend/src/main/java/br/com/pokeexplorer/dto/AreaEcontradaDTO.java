@@ -13,4 +13,5 @@ public class AreaEcontradaDTO {
     private String name;
     private String url;
     private List<String> areas;
+    private String trainer;
 }

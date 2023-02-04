@@ -19,9 +19,9 @@ public class Area {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-    private String pokemons;
-
+    private String trainer;
     private String url;
+
     public Long getId() {
         return id;
     }
@@ -38,12 +38,12 @@ public class Area {
         this.name = name;
     }
 
-    public String getPokemons() {
-        return pokemons;
+    public void setTrainer(String trainer) {
+        this.trainer = trainer;
     }
 
-    public void setPokemons(String pokemons) {
-        this.pokemons = pokemons;
+    public String getTrainer() {
+        return trainer;
     }
 
     public String getUrl() {

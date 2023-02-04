@@ -36,33 +36,19 @@ public class AreaService {
         return areaDTOList;
     }
 
-    public List<Long> findAllByPokemon(Long id){
-        Pokemon pokemon = pokemonRepository.findById(id).orElseThrow();
-
-        List<Area> allAreas = areaRepository.findAll();
-
-        List<Long> pokemonAreas = new ArrayList<>();
-
-        allAreas.forEach(area->{
-            if(area.getPokemons().contains(pokemon.getName().toLowerCase())){
-                pokemonAreas.add(area.getId());
-            }
-        });
-
-        return pokemonAreas;
-    }
-
-    public AreaEcontradaDTO findClosestArea(Long idPokemon, Long idArea, List<PokemonDTO> listPokemonDTO){
+    public AreaEcontradaDTO findClosestArea(Long startAreaId, Long finalAreaId, List<PokemonDTO> listPokemonDTO){
 
         //ids de areas onde o pokemon selecionado se encontra
-        List<Long> pokemonAreas= findAllByPokemon(idPokemon);
+        // List<Long> pokemonAreas= findAllByPokemon(idPokemon);
+        List<Area> areas = areaRepository.findAll();
 
         //iniciar grafo
         MapGraph grafo = initAreaGraph(listPokemonDTO);
 
         //pegar o nó que irá iniciar a percurso
-        List<AreaNode> initialNode = grafo.getAreaNodes().stream().filter(a -> a.getId().equals(idArea)).collect(Collectors.toList());
+        List<AreaNode> initialNode = grafo.getAreaNodes().stream().filter(a -> a.getId().equals(startAreaId)).collect(Collectors.toList());
 
+        AreaNode finalNode = grafo.getAreaNodes().stream().filter(a -> a.getId().equals(finalAreaId)).collect(Collectors.toList()).get(0);
         //aplicação do dijkstra
         calculateShortestPathFromSource(grafo, initialNode.get(0));
 
@@ -70,15 +56,15 @@ public class AreaService {
         Iterator<AreaNode> nodeIterator = grafo.getAreaNodes().iterator();
 
         //iniciar node inicial, com distância maior que a possivel(será substituído pelo primeiro)
-        AreaNode closestNode = new AreaNode(100L);
+        AreaNode closestNode = new AreaNode(1000L);
         closestNode.setDistance(1000);
 
         //percorre os nodes e vê se faz parte do que quer, com isso compara para ver se é o menor
         while (nodeIterator.hasNext()){
-            AreaNode next = nodeIterator.next();
-            if (pokemonAreas.contains(next.getId())){
-                if(closestNode.getDistance() > next.getDistance()){
-                    closestNode = next;
+            finalNode = nodeIterator.next();
+            if (areas.contains(finalNode.getId())){
+                if(closestNode.getDistance() > finalNode.getDistance()){
+                    closestNode = finalNode;
                 }
             }
         }
@@ -88,6 +74,7 @@ public class AreaService {
             Optional<Area> optionalArea = areaRepository.findById(closestNode.id);
             dto.setName(optionalArea.get().getName());
             dto.setUrl(optionalArea.get().getUrl());
+            dto.setTrainer(optionalArea.get().getTrainer());
             List<String> names = new ArrayList<String>();
             closestNode.shortestPath.forEach(path -> {
                 Optional<Area> areaOpt = areaRepository.findById(path.getId());
@@ -668,10 +655,10 @@ public class AreaService {
         Integer difference = 0;
         for (Integer totaldamageEnemy : listTotalDamage) {
             if (totalDamageMyTeam > totaldamageEnemy) {
-                difference = totaldamageEnemy - totalDamageMyTeam;
+                difference = totalDamageMyTeam - totaldamageEnemy;
                 diffs.add(500 - difference);
             } else {
-                difference = totalDamageMyTeam - totaldamageEnemy;
+                difference = totaldamageEnemy - totalDamageMyTeam;
                 diffs.add(500 + difference);
             }
         }

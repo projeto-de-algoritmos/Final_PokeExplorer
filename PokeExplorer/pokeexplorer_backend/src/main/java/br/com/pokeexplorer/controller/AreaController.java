@@ -18,19 +18,10 @@ public class AreaController {
         this.service = service;
     }
 
-    @GetMapping(path = "/areas/{PokemonId}")
-    public ResponseEntity<?> listAllAreasByPokemon(@PathVariable Long PokemonId){
+    @PostMapping(path = "/areas/{StartAreaId}/{FinalAreaId}")
+    public ResponseEntity<?> findClosestArea(@PathVariable Long StartAreaId,@PathVariable Long FinalAreaId, @RequestBody List<PokemonDTO> listPokemonDTO){
         try {
-            return ResponseEntity.ok(service.findAllByPokemon(PokemonId));
-        } catch (EmptyListPokemonException ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
-    }
-
-    @PostMapping(path = "/areas/{PokemonId}/{AreaId}")
-    public ResponseEntity<?> findClosestArea(@PathVariable Long PokemonId,@PathVariable Long AreaId, @RequestBody List<PokemonDTO> listPokemonDTO){
-        try {
-            return ResponseEntity.ok(service.findClosestArea(PokemonId, AreaId, listPokemonDTO));
+            return ResponseEntity.ok(service.findClosestArea(StartAreaId, FinalAreaId, listPokemonDTO));
         } catch (PokemonNotFoundOnAreaException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
