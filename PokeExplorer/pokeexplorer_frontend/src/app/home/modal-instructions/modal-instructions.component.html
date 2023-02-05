@@ -1,0 +1,7 @@
+<body class="modal-info">
+<div class="row titulo" > {{data.title}}</div>
+<div class="row desc" *ngFor="let i of data.instructions">
+  {{i}}
+</div>
+<button (click)="proceed()" type="button" mat-flat-button color="primary" class="proceed-button"> Continuar </button>
+</body>

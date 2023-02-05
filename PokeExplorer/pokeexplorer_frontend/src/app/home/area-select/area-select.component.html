@@ -1,0 +1,54 @@
+<form class="form mt-4" [formGroup]="areaForm" (ngSubmit)="shortestPath()">
+  <div class="form-group">
+    <div class="row" style="overflow:auto;">
+      <div class="column">
+        <h4 class="battle-text">Select Initial Area</h4>
+        <div style="text-align: center;">
+          <img *ngIf="initialArea !== null" class="area-image" style="width:220px; height :220px" [src]="imageInitialArea">
+          <img *ngIf="initialArea === null" class="question-mark" style="width:220px; height :220px" src="/assets/blackQuestionMark.png">
+        </div>
+        <div>
+          <div style="text-align: center;">
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Select Area" class="form-control" (selectionChange)="loadInitialArea($event)">
+                <mat-option *ngFor="let option of optionsAreas" [value]="option">
+                  {{option.name}}
+                  <img style="width:30px; height:30px;position: absolute; right: 0; object-fit: cover" src="{{option.url}}">
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div style="text-align: center; margin-top: 160px">
+            <mat-icon class="battle-symbol">arrow_forward</mat-icon>
+        </div>
+      </div>
+      <div class="column">
+        <h4 class="battle-text">Select Final Area</h4>
+        <div style="text-align: center;">
+          <img *ngIf="finalArea !== null" class="area-image" style="width:220px; height :220px" [src]="imageFinalArea">
+          <img *ngIf="finalArea === null" class="question-mark" style="width:220px; height :220px" src="/assets/blackQuestionMark.png">
+        </div>
+        <div>
+          <div style="text-align: center;">
+            <mat-form-field appearance="fill">
+              <mat-select placeholder="Select Area" class="form-control" (selectionChange)="loadFinalArea($event)">
+                <mat-option *ngFor="let option of optionsAreas" [value]="option">
+                  {{option.name}}
+                  <img style="width:30px; height:30px;position: absolute; right: 0; object-fit: cover" src="{{option.url}}">
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row"  style="text-align: center; padding-top: 3%">
+    <button type="submit" mat-flat-button color="primary">
+      Go!
+    </button>
+  </div>
+</form>
