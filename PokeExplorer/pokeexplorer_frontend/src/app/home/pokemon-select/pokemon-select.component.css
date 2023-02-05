@@ -49,7 +49,7 @@ mat-grid-list {
 .fixed-left{
   position: fixed;
   top: 250px;
-  left: 30px;
+  left: 10px;
 }
 
 .fixed-right{

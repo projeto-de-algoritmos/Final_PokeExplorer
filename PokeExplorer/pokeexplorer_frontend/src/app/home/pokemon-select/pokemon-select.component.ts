@@ -26,7 +26,7 @@ export class PokemonSelectComponent implements OnInit {
   instructions: string[] = [
     "Esta é a página onde você selecionará as opções que podem compor o seu time Pokemon!",
     "Em seguida será calculado o melhor time possível entre as opções, que será usado para as próximas etapas.",
-    "Para selecionar as opções, clique em cima do quadrado do pokemon desejado, que ficará verde indicando que está selecionado, em seguida clique em continuar"
+    "Para selecionar as opções, clique em cima do quadrado do pokemon desejado, que ficará verde indicando que está selecionado, em seguida clique em continuar."
   ]
 
   constructor(

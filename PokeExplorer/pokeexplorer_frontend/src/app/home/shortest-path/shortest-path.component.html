@@ -1,0 +1,55 @@
+<body>
+  <div class="form-group">
+    <div class="titulo"> Caminho da Aventura!</div>
+    <div class="row" style="overflow:auto;">
+      <div *ngFor="let a of this.path.listAreaDTO; let indexOfelement = index;" >
+        <div *ngIf="indexOfelement === 0">
+          <div class="area-frame">
+            <div class="path-column" style="width: 100%">
+              <div style="font-size: 2em; text-align: center; padding-top: 5%">{{a.name}}</div>
+              <img [src]="a.url" style="width:250px; height :250px; padding-top: 4%; object-fit: cover;">
+            </div>
+          </div>
+        </div>
+        <div *ngIf="indexOfelement > 0">
+          <div class="area-frame">
+            <div class="path-column" style="width: 60%">
+              <div style="font-size: 2em; text-align: center; padding-top: 5%">{{a.name}}</div>
+              <img [src]="a.url" style="width:250px; height :250px; padding-top: 4%; object-fit: cover;">
+            </div>
+            <div class="path-column" style="width: 35%; margin-right: 5%">
+              <img [src]="a.trainer" class="trainer">
+              <div *ngFor="let i of a.listPokemonDTO">
+                  <div *ngIf="i != null" style="height: 35px">
+                    <img [src]="i.url" class="imagem">
+                    <div class="name">{{i.name}} (Damage: {{i.damage}})</div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" style="text-align: center">
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </div>
+      </div>
+      <div class="area-frame">
+        <div class="path-column" style="width: 60%">
+          <div style="font-size: 2em; text-align: center; padding-top: 5%">{{path.name}}</div>
+          <img [src]="path.url" style="width:250px; height :250px; padding-top: 4%; object-fit: cover;">
+        </div>
+        <div class="path-column" style="width: 35%; margin-right: 5%">
+          <img [src]="path.trainer" class="trainer">
+          <div *ngFor="let i of path.listPokemonDTO">
+            <div *ngIf="i != null" style="height: 35px">
+              <img [src]="i.url" class="imagem">
+              <div class="name">{{i.name}} (Damage: {{i.damage}})</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" mat-flat-button color="accent" class="home-button" (click)="home()">
+    Viajar Novamente!
+  </button>
+</body>

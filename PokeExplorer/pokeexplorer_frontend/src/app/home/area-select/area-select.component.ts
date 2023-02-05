@@ -32,7 +32,7 @@ export class AreaSelectComponent implements OnInit {
   title: string = "Escolha o caminho!"
 
   instructions: string[] = [
-    "Agora escolha de onde o seu personagem era começar e onde quer chegar!",
+    "Agora escolha de onde o seu personagem irá começar e onde quer chegar!",
     "Assim, o algoritmo calculará baseado nos treinadores de cada área qual caminho com as batalhas mais fáceis!",
     "Para selecionar as opções, clique na caixa abaixo dos pontos de interrogação e em seguida arras até a área dejesada e clique nela."
   ]
