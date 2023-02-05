@@ -3,10 +3,10 @@ package br.com.pokeexplorer.service;
 import br.com.pokeexplorer.dto.AreaDTO;
 import br.com.pokeexplorer.dto.AreaEcontradaDTO;
 import br.com.pokeexplorer.dto.PokemonDTO;
+import br.com.pokeexplorer.dto.SimpleAreaDTO;
 import br.com.pokeexplorer.exception.EmptyListPokemonException;
 import br.com.pokeexplorer.exception.PokemonNotFoundOnAreaException;
 import br.com.pokeexplorer.model.Area;
-import br.com.pokeexplorer.model.Pokemon;
 import br.com.pokeexplorer.repository.AreaRepository;
 import br.com.pokeexplorer.repository.PokemonRepository;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ public class AreaService {
     private final AreaRepository areaRepository;
     private final PokemonRepository pokemonRepository;
     private final PokemonService pokemonService;
+    private List<List<PokemonDTO>> listEnemyPokemonDTO = new ArrayList<>(47);
 
     public AreaService(AreaRepository areaRepository, PokemonRepository pokemonRepository, PokemonService pokemonService) {
         this.areaRepository = areaRepository;
@@ -40,7 +41,7 @@ public class AreaService {
 
         //ids de areas onde o pokemon selecionado se encontra
         // List<Long> pokemonAreas= findAllByPokemon(idPokemon);
-        List<Area> areas = areaRepository.findAll();
+        Area area = areaRepository.findById(finalAreaId).get();
 
         //iniciar grafo
         MapGraph grafo = initAreaGraph(listPokemonDTO);
@@ -48,7 +49,6 @@ public class AreaService {
         //pegar o nó que irá iniciar a percurso
         List<AreaNode> initialNode = grafo.getAreaNodes().stream().filter(a -> a.getId().equals(startAreaId)).collect(Collectors.toList());
 
-        AreaNode finalNode = grafo.getAreaNodes().stream().filter(a -> a.getId().equals(finalAreaId)).collect(Collectors.toList()).get(0);
         //aplicação do dijkstra
         calculateShortestPathFromSource(grafo, initialNode.get(0));
 
@@ -56,13 +56,13 @@ public class AreaService {
         Iterator<AreaNode> nodeIterator = grafo.getAreaNodes().iterator();
 
         //iniciar node inicial, com distância maior que a possivel(será substituído pelo primeiro)
-        AreaNode closestNode = new AreaNode(1000L);
-        closestNode.setDistance(1000);
+        AreaNode closestNode = new AreaNode(1000000L);
+        closestNode.setDistance(1000000);
 
         //percorre os nodes e vê se faz parte do que quer, com isso compara para ver se é o menor
         while (nodeIterator.hasNext()){
-            finalNode = nodeIterator.next();
-            if (areas.contains(finalNode.getId())){
+            AreaNode finalNode = nodeIterator.next();
+            if (area.getId() == (finalNode.getId())){
                 if(closestNode.getDistance() > finalNode.getDistance()){
                     closestNode = finalNode;
                 }
@@ -75,15 +75,16 @@ public class AreaService {
             dto.setName(optionalArea.get().getName());
             dto.setUrl(optionalArea.get().getUrl());
             dto.setTrainer(optionalArea.get().getTrainer());
-            List<String> names = new ArrayList<String>();
+            List<SimpleAreaDTO> simpleAreaDTOS = new ArrayList<>();
             closestNode.shortestPath.forEach(path -> {
                 Optional<Area> areaOpt = areaRepository.findById(path.getId());
-                names.add(areaOpt.get().getName());
-                dto.setAreas(names);
-
+                simpleAreaDTOS.add(new SimpleAreaDTO(areaOpt.get(), listEnemyPokemonDTO.get(Math.toIntExact(areaOpt.get().getId() - 1))));
             });
+            dto.setListAreaDTO(simpleAreaDTOS);
+            dto.setListPokemonDTO( listEnemyPokemonDTO.get(Math.toIntExact(optionalArea.get().getId() - 1)));
+            listEnemyPokemonDTO.clear();
         } catch (NoSuchElementException e){
-            throw new PokemonNotFoundOnAreaException("Não foi encontrados locais para este pokémon");
+            throw new PokemonNotFoundOnAreaException("Não foi encontrado um menor caminho para o destino e/ou origem informados");
         }
         return dto;
     }
@@ -141,190 +142,237 @@ public class AreaService {
         List<Integer> listAllTotalDamage = new ArrayList<Integer>();
 
         List<PokemonDTO> pokemonDTOSEnemyNode1 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode1);
         Integer totalDamageEnemyNode1 = pokemonService.totalDamage(pokemonDTOSEnemyNode1);
         listAllTotalDamage.add(totalDamageEnemyNode1);
 
         List<PokemonDTO> pokemonDTOSEnemyNode2 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode2);
         Integer totalDamageEnemyNode2 = pokemonService.totalDamage(pokemonDTOSEnemyNode2);
         listAllTotalDamage.add(totalDamageEnemyNode2);
 
         List<PokemonDTO> pokemonDTOSEnemyNode3 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode3);
         Integer totalDamageEnemyNode3 = pokemonService.totalDamage(pokemonDTOSEnemyNode3);
         listAllTotalDamage.add(totalDamageEnemyNode3);
 
         List<PokemonDTO> pokemonDTOSEnemyNode4 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode4);
         Integer totalDamageEnemyNode4 = pokemonService.totalDamage(pokemonDTOSEnemyNode4);
         listAllTotalDamage.add(totalDamageEnemyNode4);
 
         List<PokemonDTO> pokemonDTOSEnemyNode5 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode5);
         Integer totalDamageEnemyNode5 = pokemonService.totalDamage(pokemonDTOSEnemyNode5);
         listAllTotalDamage.add(totalDamageEnemyNode5);
 
         List<PokemonDTO> pokemonDTOSEnemyNode6 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode6);
         Integer totalDamageEnemyNode6 = pokemonService.totalDamage(pokemonDTOSEnemyNode6);
         listAllTotalDamage.add(totalDamageEnemyNode6);
 
         List<PokemonDTO> pokemonDTOSEnemyNode7 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode7);
         Integer totalDamageEnemyNode7 = pokemonService.totalDamage(pokemonDTOSEnemyNode7);
         listAllTotalDamage.add(totalDamageEnemyNode7);
 
         List<PokemonDTO> pokemonDTOSEnemyNode8 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode8);
         Integer totalDamageEnemyNode8 = pokemonService.totalDamage(pokemonDTOSEnemyNode8);
         listAllTotalDamage.add(totalDamageEnemyNode8);
 
         List<PokemonDTO> pokemonDTOSEnemyNode9 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode9);
         Integer totalDamageEnemyNode9 = pokemonService.totalDamage(pokemonDTOSEnemyNode9);
         listAllTotalDamage.add(totalDamageEnemyNode9);
 
         List<PokemonDTO> pokemonDTOSEnemyNode10 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode10);
         Integer totalDamageEnemyNode10 = pokemonService.totalDamage(pokemonDTOSEnemyNode10);
         listAllTotalDamage.add(totalDamageEnemyNode10);
 
         List<PokemonDTO> pokemonDTOSEnemyNode11 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode11);
         Integer totalDamageEnemyNode11 = pokemonService.totalDamage(pokemonDTOSEnemyNode11);
         listAllTotalDamage.add(totalDamageEnemyNode11);
 
         List<PokemonDTO> pokemonDTOSEnemyNode12 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode12);
         Integer totalDamageEnemyNode12 = pokemonService.totalDamage(pokemonDTOSEnemyNode12);
         listAllTotalDamage.add(totalDamageEnemyNode12);
 
         List<PokemonDTO> pokemonDTOSEnemyNode13 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode13);
         Integer totalDamageEnemyNode13 = pokemonService.totalDamage(pokemonDTOSEnemyNode13);
         listAllTotalDamage.add(totalDamageEnemyNode13);
 
         List<PokemonDTO> pokemonDTOSEnemyNode14 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode14);
         Integer totalDamageEnemyNode14 = pokemonService.totalDamage(pokemonDTOSEnemyNode14);
         listAllTotalDamage.add(totalDamageEnemyNode14);
 
         List<PokemonDTO> pokemonDTOSEnemyNode15 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode15);
         Integer totalDamageEnemyNode15 = pokemonService.totalDamage(pokemonDTOSEnemyNode15);
         listAllTotalDamage.add(totalDamageEnemyNode15);
 
         List<PokemonDTO> pokemonDTOSEnemyNode16 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode16);
         Integer totalDamageEnemyNode16 = pokemonService.totalDamage(pokemonDTOSEnemyNode16);
         listAllTotalDamage.add(totalDamageEnemyNode16);
 
         List<PokemonDTO> pokemonDTOSEnemyNode17 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode17);
         Integer totalDamageEnemyNode17 = pokemonService.totalDamage(pokemonDTOSEnemyNode17);
         listAllTotalDamage.add(totalDamageEnemyNode17);
 
         List<PokemonDTO> pokemonDTOSEnemyNode18 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode18);
         Integer totalDamageEnemyNode18 = pokemonService.totalDamage(pokemonDTOSEnemyNode18);
         listAllTotalDamage.add(totalDamageEnemyNode18);
 
         List<PokemonDTO> pokemonDTOSEnemyNode19 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode19);
         Integer totalDamageEnemyNode19 = pokemonService.totalDamage(pokemonDTOSEnemyNode19);
         listAllTotalDamage.add(totalDamageEnemyNode19);
 
         List<PokemonDTO> pokemonDTOSEnemyNode20 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode20);
         Integer totalDamageEnemyNode20 = pokemonService.totalDamage(pokemonDTOSEnemyNode20);
         listAllTotalDamage.add(totalDamageEnemyNode20);
 
         List<PokemonDTO> pokemonDTOSEnemyNode21 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode21);
         Integer totalDamageEnemyNode21 = pokemonService.totalDamage(pokemonDTOSEnemyNode21);
         listAllTotalDamage.add(totalDamageEnemyNode21);
 
         List<PokemonDTO> pokemonDTOSEnemyNode22 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode22);
         Integer totalDamageEnemyNode22 = pokemonService.totalDamage(pokemonDTOSEnemyNode22);
         listAllTotalDamage.add(totalDamageEnemyNode22);
 
         List<PokemonDTO> pokemonDTOSEnemyNode23 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode23);
         Integer totalDamageEnemyNode23 = pokemonService.totalDamage(pokemonDTOSEnemyNode23);
         listAllTotalDamage.add(totalDamageEnemyNode23);
 
         List<PokemonDTO> pokemonDTOSEnemyNode24 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode24);
         Integer totalDamageEnemyNode24 = pokemonService.totalDamage(pokemonDTOSEnemyNode24);
         listAllTotalDamage.add(totalDamageEnemyNode24);
 
         List<PokemonDTO> pokemonDTOSEnemyNode25 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode25);
         Integer totalDamageEnemyNode25 = pokemonService.totalDamage(pokemonDTOSEnemyNode25);
         listAllTotalDamage.add(totalDamageEnemyNode25);
 
         List<PokemonDTO> pokemonDTOSEnemyNode26 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode26);
         Integer totalDamageEnemyNode26 = pokemonService.totalDamage(pokemonDTOSEnemyNode26);
         listAllTotalDamage.add(totalDamageEnemyNode26);
 
         List<PokemonDTO> pokemonDTOSEnemyNode27= pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode27);
         Integer totalDamageEnemyNode27 = pokemonService.totalDamage(pokemonDTOSEnemyNode27);
         listAllTotalDamage.add(totalDamageEnemyNode27);
 
         List<PokemonDTO> pokemonDTOSEnemyNode28 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode28);
         Integer totalDamageEnemyNode28 = pokemonService.totalDamage(pokemonDTOSEnemyNode28);
         listAllTotalDamage.add(totalDamageEnemyNode28);
 
         List<PokemonDTO> pokemonDTOSEnemyNode29 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode29);
         Integer totalDamageEnemyNode29 = pokemonService.totalDamage(pokemonDTOSEnemyNode29);
         listAllTotalDamage.add(totalDamageEnemyNode29);
 
         List<PokemonDTO> pokemonDTOSEnemyNode30 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode30);
         Integer totalDamageEnemyNode30 = pokemonService.totalDamage(pokemonDTOSEnemyNode30);
         listAllTotalDamage.add(totalDamageEnemyNode30);
 
         List<PokemonDTO> pokemonDTOSEnemyNode31 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode31);
         Integer totalDamageEnemyNode31 = pokemonService.totalDamage(pokemonDTOSEnemyNode31);
         listAllTotalDamage.add(totalDamageEnemyNode31);
 
         List<PokemonDTO> pokemonDTOSEnemyNode32 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode32);
         Integer totalDamageEnemyNode32 = pokemonService.totalDamage(pokemonDTOSEnemyNode32);
         listAllTotalDamage.add(totalDamageEnemyNode32);
 
         List<PokemonDTO> pokemonDTOSEnemyNode33 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode33);
         Integer totalDamageEnemyNode33 = pokemonService.totalDamage(pokemonDTOSEnemyNode33);
         listAllTotalDamage.add(totalDamageEnemyNode33);
 
         List<PokemonDTO> pokemonDTOSEnemyNode34 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode34);
         Integer totalDamageEnemyNode34 = pokemonService.totalDamage(pokemonDTOSEnemyNode34);
         listAllTotalDamage.add(totalDamageEnemyNode34);
 
         List<PokemonDTO> pokemonDTOSEnemyNode35 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode35);
         Integer totalDamageEnemyNode35 = pokemonService.totalDamage(pokemonDTOSEnemyNode35);
         listAllTotalDamage.add(totalDamageEnemyNode35);
 
         List<PokemonDTO> pokemonDTOSEnemyNode36 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode36);
         Integer totalDamageEnemyNode36 = pokemonService.totalDamage(pokemonDTOSEnemyNode36);
         listAllTotalDamage.add(totalDamageEnemyNode36);
 
         List<PokemonDTO> pokemonDTOSEnemyNode37= pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode37);
         Integer totalDamageEnemyNode37 = pokemonService.totalDamage(pokemonDTOSEnemyNode37);
         listAllTotalDamage.add(totalDamageEnemyNode37);
 
         List<PokemonDTO> pokemonDTOSEnemyNode38 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode38);
         Integer totalDamageEnemyNode38 = pokemonService.totalDamage(pokemonDTOSEnemyNode38);
         listAllTotalDamage.add(totalDamageEnemyNode38);
 
         List<PokemonDTO> pokemonDTOSEnemyNode39 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode39);
         Integer totalDamageEnemyNode39 = pokemonService.totalDamage(pokemonDTOSEnemyNode39);
         listAllTotalDamage.add(totalDamageEnemyNode39);
 
         List<PokemonDTO> pokemonDTOSEnemyNode40 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode40);
         Integer totalDamageEnemyNode40 = pokemonService.totalDamage(pokemonDTOSEnemyNode40);
         listAllTotalDamage.add(totalDamageEnemyNode40);
 
         List<PokemonDTO> pokemonDTOSEnemyNode41 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode41);
         Integer totalDamageEnemyNode41 = pokemonService.totalDamage(pokemonDTOSEnemyNode41);
         listAllTotalDamage.add(totalDamageEnemyNode41);
 
         List<PokemonDTO> pokemonDTOSEnemyNode42 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode42);
         Integer totalDamageEnemyNode42 = pokemonService.totalDamage(pokemonDTOSEnemyNode42);
         listAllTotalDamage.add(totalDamageEnemyNode42);
 
         List<PokemonDTO> pokemonDTOSEnemyNode43 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode43);
         Integer totalDamageEnemyNode43 = pokemonService.totalDamage(pokemonDTOSEnemyNode43);
         listAllTotalDamage.add(totalDamageEnemyNode43);
 
         List<PokemonDTO> pokemonDTOSEnemyNode44 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode44);
         Integer totalDamageEnemyNode44 = pokemonService.totalDamage(pokemonDTOSEnemyNode44);
         listAllTotalDamage.add(totalDamageEnemyNode44);
 
         List<PokemonDTO> pokemonDTOSEnemyNode45 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode45);
         Integer totalDamageEnemyNode45 = pokemonService.totalDamage(pokemonDTOSEnemyNode45);
         listAllTotalDamage.add(totalDamageEnemyNode45);
 
         List<PokemonDTO> pokemonDTOSEnemyNode46 = pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode46);
         Integer totalDamageEnemyNode46 = pokemonService.totalDamage(pokemonDTOSEnemyNode46);
         listAllTotalDamage.add(totalDamageEnemyNode46);
 
         List<PokemonDTO> pokemonDTOSEnemyNode47= pokemonService.calculateBestTeamEnemy();
+        listEnemyPokemonDTO.add(pokemonDTOSEnemyNode47);
         Integer totalDamageEnemyNode47 = pokemonService.totalDamage(pokemonDTOSEnemyNode47);
         listAllTotalDamage.add(totalDamageEnemyNode47);
 
@@ -528,7 +576,6 @@ public class AreaService {
         graph.addAreaNode(node45);
         graph.addAreaNode(node46);
         graph.addAreaNode(node47);
-
 
         return graph;
     }
