@@ -8,6 +8,9 @@ html, body { height: 100%; }
 body { margin: 0; font-family: pokemon, "Helvetica Neue", sans-serif; }
 
 .background{
+  /*position: fixed;*/
+  /*top: 0;*/
+  background-attachment: fixed;
   background-image: url(/assets/background.jpg);
   background-repeat: no-repeat;
   background-size: cover;
@@ -30,11 +33,13 @@ body { margin: 0; font-family: pokemon, "Helvetica Neue", sans-serif; }
 }
 
 .area-frame{
+  text-align: center;
   background-image: url(assets/border-pokemon.png);
   background-size: 100% 100%;
-  margin: auto;
-  width: fit-content;
-  padding: 7%;
+  margin-left: 25%;
+  margin-right: 25%;
+  width: 50%;
+  height: 500px;
 }
 
 mat-grid-tile{
@@ -54,5 +59,14 @@ mat-grid-tile{
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.background-path{
+  width: 100%;
+  /*position: fixed;*/
+  top: 10%;
+  background-image: url(/assets/background.jpg);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 

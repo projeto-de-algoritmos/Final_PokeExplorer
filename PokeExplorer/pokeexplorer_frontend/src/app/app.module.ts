@@ -13,14 +13,15 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonModule} from "@angular/material/button";
 import { InitPageComponent } from './home/init-page/init-page.component';
-import { AreasInfoComponent } from './home/areas-info/areas-info.component';
+import { ShortestPathComponent } from './home/shortest-path/shortest-path.component';
+import {MatGridListModule} from "@angular/material/grid-list";
 
 @NgModule({
   declarations: [
     AppComponent,
     AreaSelectComponent,
     InitPageComponent,
-    AreasInfoComponent,
+    ShortestPathComponent,
   ],
     imports: [
         BrowserModule,
@@ -33,7 +34,8 @@ import { AreasInfoComponent } from './home/areas-info/areas-info.component';
         MatFormFieldModule,
         MatSelectModule,
         ReactiveFormsModule,
-        MatButtonModule
+        MatButtonModule,
+        MatGridListModule
 
     ],
   providers: [],

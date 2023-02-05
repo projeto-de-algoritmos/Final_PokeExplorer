@@ -17,8 +17,8 @@ export class AreaService {
     return this.http.get<Areas>(`${API}/areas`);
   }
 
-  findClosestArea(pokemonId: number, areaId: number): Observable<Areas> {
-    return this.http.post<Areas>(`${API}/areas/${pokemonId}/${areaId}`, {});
+  findClosestArea(startAreaId: number, finalAreaId: number, userTeam: any): Observable<Areas> {
+    return this.http.post<Areas>(`${API}/areas/${startAreaId}/${finalAreaId}`, userTeam);
   }
 
 }

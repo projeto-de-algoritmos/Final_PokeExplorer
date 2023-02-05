@@ -4,7 +4,7 @@ import {HomeComponent} from "./home/home.component";
 import {PokemonSelectComponent} from "./home/pokemon-select/pokemon-select.component";
 import {AreaSelectComponent} from "./home/area-select/area-select.component";
 import {InitPageComponent} from "./home/init-page/init-page.component";
-import {AreasInfoComponent} from "./home/areas-info/areas-info.component";
+import {ShortestPathComponent} from "./home/shortest-path/shortest-path.component";
 
 const routes: Routes = [{
   path: '',
@@ -17,14 +17,15 @@ const routes: Routes = [{
     {
       path: 'pokemons',
       component: PokemonSelectComponent,
-    },    {
-      path: 'info-area',
-      component: AreasInfoComponent,
     },
     {
       path: 'select-area',
       component: AreaSelectComponent,
-    }
+    },
+    {
+      path: 'shortest-path',
+      component: ShortestPathComponent,
+    },
   ]
 }];
 
