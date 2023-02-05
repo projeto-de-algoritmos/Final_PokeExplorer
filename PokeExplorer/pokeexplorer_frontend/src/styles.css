@@ -14,11 +14,8 @@ body { margin: 0; font-family: pokemon, "Helvetica Neue", sans-serif; }
 }
 
 .modal-background{
-  height: auto;
-  background-image: url(/assets/modal-background.png);
-  background-repeat: no-repeat;
+  background-image: url("assets/grass.png");
   background-size: cover;
-  padding: 0;
 }
 
 .frame{
@@ -39,3 +36,23 @@ body { margin: 0; font-family: pokemon, "Helvetica Neue", sans-serif; }
   width: fit-content;
   padding: 7%;
 }
+
+mat-grid-tile{
+  background-image: url("assets/grass.png");
+  background-size: contain;
+}
+
+.modal{
+  background-image: url(assets/border-pokemon.png);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.modal-info{
+  background-image: url(assets/info-modal.jpg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+

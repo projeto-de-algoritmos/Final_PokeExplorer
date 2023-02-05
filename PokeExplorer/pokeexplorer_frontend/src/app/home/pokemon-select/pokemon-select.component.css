@@ -1,24 +1,7 @@
-img{
-  margin-bottom: 10px;
-}
-
-.area-image{
-  object-fit: cover;
-  border-radius: 50%;
-  border-style: solid;
-  border-color: red;
-  border-width: 15px;
-}
 
 .column {
   float: left;
-  width: 33.33%;
-}
-
-h4 {
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 8px;
+  width: 10%;
 }
 
 .vertical-center {
@@ -30,20 +13,49 @@ h4 {
   transform: translate(-50%, -50%);
 }
 
-.question-mark{
-  opacity: 30%;
+mat-grid-list {
+  padding-bottom: 0 !important;
 }
 
-.battle-symbol{
-  height: auto;
-  width: auto;
-  font-size: 150px;
+.direita{
+  position: absolute;
+  right: 0;
 }
 
-.battle-text{
-  font-size: xx-large;
-  color: yellow;
-  -webkit-text-stroke: 1px blue;
+.esquerda{
+  position: absolute;
+  left: 0;
+}
+
+.centro{
+  position: absolute;
+  left: 25%;
+}
+
+.button{
+  background-color: transparent;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  height: 100%;
+}
+
+.tile{
+  border-color: lawngreen;
+  border-width: 3px;
+  border-style: solid;
+}
+
+.fixed-left{
+  position: fixed;
+  top: 250px;
+  left: 30px;
+}
+
+.fixed-right{
+  position: fixed;
+  top: 280px;
+  right: 160px;
 }
 
 

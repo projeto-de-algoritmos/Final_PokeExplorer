@@ -1,0 +1,19 @@
+<body class="modal-background">
+<button class="close" (click)="onNoClick()">
+  <mat-icon>close</mat-icon>
+</button>
+<div class="desc">Your team is:</div>
+<mat-grid-list cols="3" rowHeight="1:1" gutterSize="4px" class="best-team" >
+  <div *ngFor="let i of resposta" >
+    <mat-grid-tile class="modal">
+      <div *ngIf="i != null" style="padding: 8%">
+        <div class="name">{{i.name}}</div>
+        <img [src]="i.url" class="imagem">
+        <div class="stats">Health: {{i.health}}</div>
+        <div class="stats">Damage: {{i.damage}}</div>
+      </div>
+    </mat-grid-tile>
+  </div>
+    <button (click)="nextPage()" type="button" mat-flat-button color="primary" class="next-page-button"> Go! </button>
+</mat-grid-list>
+</body>

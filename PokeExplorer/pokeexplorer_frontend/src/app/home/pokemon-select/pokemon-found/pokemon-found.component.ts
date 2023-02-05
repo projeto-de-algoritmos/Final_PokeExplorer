@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Pokemon} from "../interfaces/pokemons";
+import {Router} from "@angular/router";
 export interface DialogData {
-  pokemon: Pokemon;
+  title: string;
+  instructions: string[];
 }
 
 @Component({
@@ -14,21 +15,23 @@ export class PokemonFoundComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PokemonFoundComponent>,
+    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {}
 
-  area: any = this.data
+  resposta: any = this.data
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
-  print() {
-    console.log(this.area)
-  }
-
   ngOnInit(): void {
-    console.log(this.area)
+    console.log(this.resposta)
   }
 
+  nextPage() {
+    this.dialogRef.close();
+    this.router.navigate(['select-area'], {state: { data: this.data}});
+
+  }
 }

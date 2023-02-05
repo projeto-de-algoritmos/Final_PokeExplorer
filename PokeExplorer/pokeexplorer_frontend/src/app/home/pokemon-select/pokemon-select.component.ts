@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder} from '@angular/forms';
 import {PokemonService} from '../services/pokemon.service';
-import {Pokemon} from '../interfaces/pokemons';
-import {MatSelectChange} from "@angular/material/select";
 import {MatDialog} from "@angular/material/dialog";
-import {AreaService} from "../services/area.service";
-import {Area} from "../interfaces/areas";
-import {PokemonNotFoundComponent} from "../pokemon-not-found/pokemon-not-found.component";
-import { PokemonFoundComponent } from '../pokemon-found/pokemon-found.component';
+import {Pokemons} from "../interfaces/pokemons";
+import {PokemonNotFoundComponent} from "./pokemon-not-found/pokemon-not-found.component";
+import {PokemonFoundComponent} from "./pokemon-found/pokemon-found.component";
+import {ModalInstructionsComponent} from "../modal-instructions/modal-instructions.component";
 
 
 @Component({
@@ -17,21 +15,21 @@ import { PokemonFoundComponent } from '../pokemon-found/pokemon-found.component'
 })
 export class PokemonSelectComponent implements OnInit {
 
-  optionsPokemon: any[] = [];
-  optionsAreas: any[] = [];
-  imageAlt: any;
-  imageSourceSelf: any;
-  imageArea: any;
+  list: Pokemons[] | undefined;
   pokemon: any = null;
-  area: any = null;
-
   pokemonForm = this.formBuilder.group({
     pokemon: '',
-    area: '',
   });
 
+  title: string = "Escolha do seu time!"
+
+  instructions: string[] = [
+    "Esta é a página onde você selecionará as opções que podem compor o seu time Pokemon!",
+    "Em seguida será calculado o melhor time possível entre as opções, que será usado para as próximas etapas.",
+    "Para selecionar as opções, clique em cima do quadrado do pokemon desejado, que ficará verde indicando que está selecionado, em seguida clique em continuar"
+  ]
+
   constructor(
-    private areaService: AreaService,
     private pokemonService: PokemonService,
     private formBuilder: FormBuilder,
     public dialog: MatDialog,
@@ -40,21 +38,8 @@ export class PokemonSelectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.pokemonService.listPokemon().subscribe((response: any) => {
-      response.map((pokemon: Pokemon) => {
-        this.extractPokemon(pokemon);
-      });
-      this.optionsPokemon = response
-      console.log(this.optionsPokemon)
-    });
-
-    this.areaService.listArea().subscribe((response: any) => {
-      response.map((area: Area) => {
-        this.extractArea(area);
-      });
-      this.optionsAreas = response;
-    })
+    this.openInitDialog(this.title, this.instructions);
+    this.pokemonService.listOptionsPokemons().forEach((pokemon)=> this.list = pokemon);
   }
 
   openDialogError(): void {
@@ -70,7 +55,7 @@ export class PokemonSelectComponent implements OnInit {
 
   openDialog(response: any): void {
     const dialogRef = this.dialog.open(PokemonFoundComponent, {
-      width: '500px',
+      width: '700px',
       height: '500px',
       data: response,
     });
@@ -80,46 +65,48 @@ export class PokemonSelectComponent implements OnInit {
     });
   }
 
-  extractPokemon(pokemon: Pokemon) {
-    return {
-      id: pokemon.id,
-      name: pokemon.name,
-      url: pokemon.url
-    };
-  }
-
-  extractArea(area: Area) {
-    return {
-      id: area.id,
-      name: area.name,
-      url: area.url
-    };
-  }
-
-  loadPokemonSelf($event: MatSelectChange) {
-    if($event.value !== null){
-      this.imageSourceSelf = $event.value.url
-      this.pokemon = $event.value.id
-    } else {
-      this.pokemon = $event.value
-    }
-  }
-
-  loadArea($event: MatSelectChange) {
-    if($event.value !== null){
-      this.imageArea = $event.value.url
-      this.area = $event.value.id
-    } else {
-      this.area = $event.value
-    }
-  }
-
   find() {
-    this.areaService.findClosestArea(this.pokemon, this.area).subscribe((response: any) => {
+    let selectedList: Array<Pokemons> = []
+
+    console.log(this.list);
+
+    this.list?.forEach((pokemon) => {
+        if (pokemon.selected){
+          selectedList.push(pokemon);
+        }
+    })
+
+
+    this.pokemonService.bestTeam(selectedList).subscribe((response: any) => {
       this.openDialog(response);
       }, (error: any) => {
       this.openDialogError();
       }
     );
+  }
+
+  setSelected(pokemon: Pokemons) {
+    pokemon.selected = !pokemon.selected
+  }
+
+  selectAll() {
+    this.list?.forEach((pokemon) => {
+      pokemon.selected = true;
+    })
+  }
+
+  unselectAll() {
+    this.list?.forEach((pokemon) => {
+      pokemon.selected = false;
+    })
+  }
+
+  private openInitDialog(title: any, instructions: any) {
+    this.dialog.open(ModalInstructionsComponent, {
+      width: '800px',
+      height: '440px',
+      data: {title, instructions}
+    });
+
   }
 }

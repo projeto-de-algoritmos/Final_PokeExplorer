@@ -1,9 +1,8 @@
-export interface Pokemon {
+export interface Pokemons {
   id: number;
   name: string;
   url: string;
-  firstType: string;
-  secondType: string;
+  damage: number;
+  health: number;
+  selected: boolean;
 }
-
-export type Pokemons = Array<Pokemon>;

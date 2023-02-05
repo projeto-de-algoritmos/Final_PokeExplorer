@@ -1,0 +1,25 @@
+.titulo{
+  width: 60%;
+  margin-left: 20%;
+  margin-right: 20%;
+  margin-bottom: 6%;
+  font-size: xxx-large;
+  text-align: center;
+  color: yellow;
+  -webkit-text-stroke-width: 3px;
+  -webkit-text-stroke-color: blue;
+}
+
+.desc{
+  text-align: center;
+  font-size: x-large;
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-bottom: 6%;
+}
+.next-page-button{
+  width: 10%;
+  margin-left: 45%;
+  margin-right: 45%;
+}

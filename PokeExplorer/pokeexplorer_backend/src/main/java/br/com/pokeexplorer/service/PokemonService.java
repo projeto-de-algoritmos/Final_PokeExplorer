@@ -40,7 +40,7 @@ public class PokemonService {
             }
         }
         List<PokemonDTO> pokemonDTOList = new ArrayList<PokemonDTO>(50);
-        for (int i = 0; i < 40; i++){
+        for (int i = 0; i < 50; i++){
             Optional<Pokemon> optPokemon = repository.findById((long) array[i]);
             pokemonDTOList.add(new PokemonDTO(optPokemon.get()));
         }
