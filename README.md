@@ -10,27 +10,42 @@
 | 18/0145363 |  Yan Andrade de Sena  |
 
 ## Sobre 
-O objetivo do PokeExplorer é apresentar uma interface direta e simples de utilizar, que tem a função de mostrar o lugar onde o pokemon foi encontrado. Para isso é utilizado o algoritmo de djikstra e estrutura de Grafos com arestas com pesos, onde estabelece a difculdade ou facilidade de acesso as rotas, cidades e outros lugares. 
-
-## Grafo Utilizado
-
-![Grafo_Kanto](assets-readme/grafo-kanto.png)
-
+O PokeExplorer é uma aplicação web que mostra o caminho mais fácil entre duas cidades na area ficcional de Kanto. 
+Para isso, é feito o seguinte passo a passo, após ser selecionado as opçãos possiveis do time do usuário, o algoritmo, 
+utilizando o algoritmo da mochila, calcula o melhor time entre as opções possíveis, o mesmo é feito para os times dos inimigos, 
+em que é aplicado o algoritmo da mochila em 20 pokemons aleatórios entre todos os possíveis. Assim, é calculado a diferença entre o time 
+do usuário e dos inimigos, baseando-se no dano, e é setado para cada aresta de um grafo com todas as cidades de Kanto, a dificuldade 
+baseada na diferença do dano. Por fim, o algoritmo calcula, usando o Algoritmo Dijkstra, qual o caminho mais fácil.
 
 ## Screenshots
 
-### Pagina inicial (Sem Seleção)
+### Pagina inicial 
 
-![Itens não selecionados](assets-readme/pokefind-notselected.png) 
+![Paginal_inicial](assets-readme/pag-inicial.png) 
 
-### Pagina inicial (Area e Pokemon Selecionados)
+### Modal de instruções
 
-![Pokemons selecionados](assets-readme/pokefind-selected.png) 
+![Modal_instrucoes](assets-readme/modal-instrucao.png) 
 
-### Modal de caminho
+### Seleção de pokemon
 
-![Modal Caminho Inicio](assets-readme/pokefind-modal-1.png) 
-![Modal Caminho Final](assets-readme/pokefind-modal-2.png) 
+![Seleção_pokemon](assets-readme/selecao-pokemon.png) 
+
+### Modal Melhor Time
+
+![Modal_time](assets-readme/modal-melhor-time.png) 
+
+
+### Seleção de área
+
+![Seleção_area](assets-readme/selecao-area.png) 
+
+
+### Resultado Final
+
+![Resultado Final_1](assets-readme/resultado-1.png) 
+
+![Resultado Final_2](assets-readme/resultado-2.png) 
 
 ## Instalação 
 **Linguagem**: Java, Typescript<br>
@@ -65,11 +80,16 @@ http://localhost:4200
 ```
 
 ## Uso 
-Para a utilizaçao devemos selecionar a área inicial da busca e o pokemon procurado e em seguida apertar o botão: ``"Go!"``.
+Na Página inicial Clique em "Começar".
+
+Em seguida, selecione, clicando em cima do quadrado do pokemon desejado, todas as opções que poderão ser usadas na seleção do melhor time. Então clique em "Próximo".
+
+Na tela de Área, clique na caixa de selação e em seguida clique na opção desejada para área inicial e repita o processo para a área final. Em seguida clique em "Continuar"
+
 
 ## Outros
 
 ### Download Apresentação
 
-Segue o Link para download da [Apresentação do projeto](assets-readme/apresentacao-pokefind.mp4).<br>
+Segue o Link para download da [Apresentação do projeto](assets-readme/entrega-pokeexplorer.mp4).<br>
 (Para download, clique no link e depois nas opções *Download* ou *View Raw*)
